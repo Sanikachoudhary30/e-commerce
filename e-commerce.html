@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shop</title>
+    <style>
+        /* General body and layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 75%;
+        }
+
+        .product {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .product h3 {
+            margin: 10px 0;
+        }
+
+        .product .price {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .cart {
+            width: 300px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cart ul li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #checkout {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #checkout:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Shop Now</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">Cart (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="products">
+            <div class="product" data-id="1">
+                <img src="https://via.placeholder.com/150" alt="Product 1">
+                <h3>Product 1</h3>
+                <p class="price">$20</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="product" data-id="2">
+                <img src="https://via.placeholder.com/150" alt="Product 2">
+                <h3>Product 2</h3>
+                <p class="price">$40</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="product" data-id="3">
+                <img src="https://via.placeholder.com/150" alt="Product 3">
+                <h3>Product 3</h3>
+                <p class="price">$60</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </section>
+
+        <section class="cart" id="cart">
+            <h2>Your Cart</h2>
+            <ul id="cart-items">
+                <!-- Cart items will be added dynamically -->
+            </ul>
+            <p>Total: $<span id="total-price">0</span></p>
+            <button id="checkout">Proceed to Checkout</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Shop Now. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        const products = [
+            { id: 1, name: 'Product 1', price: 20 },
+            { id: 2, name: 'Product 2', price: 40 },
+            { id: 3, name: 'Product 3', price: 60 },
+        ];
+
+        // Function to update cart count and total
+        function updateCart() {
+            const cartCount = document.getElementById('cart-count');
+            const cartItemsList = document.getElementById('cart-items');
+            const totalPriceElement = document.getElementById('total-price');
+
+            cartCount.textContent = cart.length;
+            cartItemsList.innerHTML = '';
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - $${item.price}`;
+                cartItemsList.appendChild(li);
+                totalPrice += item.price;
+            });
+
+            totalPriceElement.textContent = totalPrice;
+        }
+
+        // Event listener for "Add to Cart" buttons
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                const product = products[index];
+                cart.push(product);
+                updateCart();
+            });
+        });
+
+        // Checkout button functionality
+        const checkoutButton = document.getElementById('checkout');
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length > 0) {
+                alert('Thank you for your purchase!');
+                cart = [];
+                updateCart();
+            } else {
+                alert('Your cart is empty!');
+            }
+        });
+    </script>
+</body>
+
+</html>
